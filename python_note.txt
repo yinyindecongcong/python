@@ -1,0 +1,8 @@
+python_note
+
+
+1.print( , end = '')
+
+2.and 与 or
+
+3.a < b < c 等价于 (a < b) and (b < c)
