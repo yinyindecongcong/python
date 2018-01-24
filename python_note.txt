@@ -5,4 +5,66 @@ python_note
 
 2.and 与 or
 
-3.a < b < c 等价于 (a < b) and (b < c)
+3.a < b < c 等价于 (a < b) and (b < c)	
+
+4.x,y,z = z,y,x交换
+
+5.list1 = list2是同一个列表的两个名字 list1 = list2[:]列表分片得到两个列表，跟list2.copy()相同
+
+6.列表推导式（list comprehensions）,或列表解析，用于建立动态列表
+  格式为[expression of a for a in B]
+
+1.python的对象的类型和内存都是在运行时确定的——故称python为动态类型（对变量内存地址的分配是运行时自动判断变量类型并赋值）
+
+2.python内存管理，从较浅的层面来说，Python的内存管理机制可以从三个方面来讲：
+http://www.cnblogs.com/CBDoctor/p/3781078.html
+（1）引用计数：当对象被创建或复制等时，引用次数加一，反之减一
+
+（2）垃圾回收：（不考虑其他情况）当引用次数为0时，用户不可能访问到该对象，将自动回收
+
+（3）内存池机制：当创建对象在1-256字节内，使用python自己的内存管理系统，否则使用malloc
+
+3.__new__(),创建一个实例对象但不赋值，返回当前类cls，也可返回父类（但此时__init__无法接收到当前类cls，所以不会调用）----参考内存池机制
+
+4.__init__(),对__new__()创建的实例对象进行赋值
+
+5.__del__(),当对象的引用次数为0时自动调用，回收该对象
+
+6.python的函数参数既不是传值也不是传引用，而是传参数的内存地址（类似指针）
+http://blog.csdn.net/theonegis/article/details/51013079
+
+7.类的非绑定方法：需要有实例作为参数才可以调用
+
+8.静态方法：属于一个类但不需要对象（也可以有）就可调用的函数
+  类方法：类方法是绑定在类上（而不是对象）的方法，可做工厂方法，创建类实例并做一些预处理的工作
+http://bbs.fishc.com/thread-49126-1-1.html
+个人理解：静态方法继承的时候的问题：在类的其他静态方法调用该静态方法的时候，需要写当前的类名（因为没有self或cls参数），则当继承之后该方法调用的仍然是父类的静态方法，这种时候不适合直接使用静态方法，而应该使用普通方法或类方法调用。（emmm..文章给的例子不懂）
+
+9.函数闭包：函数内部包含子函数并返回子函数，达到通过子函数访问函数内部局部变量的目的。
+  作用：1.达到数据缓存的目的（局部变量只定义初始化一次，但我们可以多次调用子函数并使用该变量，效率更高  2.封装，只有子函数可以访问到局部变量（类似类）
+  http://www.cnblogs.com/leoin2012/p/3978979.html
+def f1( ... )
+    n = 0
+    def f2( ... )
+        nonlocal n #python对外部变量只能访问而不能修改，加上nonlocal关键字就可以了
+        n = n + 1
+        return n
+    return f2
+end
+count = f1()
+print(count())        --1
+print(count())        --2
+print(count())        --3
+print(count())        --4
+print(count())        --5
+
+10.修饰符：使用函数闭包的概念
+  http://blog.csdn.net/shangliuyan/article/details/8555991
+def timeit(func):  
+    def wrapper():  
+        '''do somgthing
+       func() 
+    return wrapper  
+@timeit  
+def foo(): 
+等价于foo = timeit（foo）
